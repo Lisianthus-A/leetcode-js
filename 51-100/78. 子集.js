@@ -3,7 +3,6 @@
  * @return {number[][]}
  */
 var subsets = function(nums) {
-    let len = nums.length;
     let res = [];
     for (let i of nums) {
         let n = res.length;
