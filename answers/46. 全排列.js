@@ -3,28 +3,19 @@
  * @return {number[][]}
  */
 var permute = function (nums) {
-    let res = [];
-    let fullArr = ['0'];
-    //生成全排列，由fullArr保存
-    for (let i = 1; i < nums.length; i++) {
-        let len = fullArr.length;
-        for (let j = 0; j < len; j++) {
-            for (let k in fullArr[j]) {
-                let arr = fullArr[j].split('');
-                arr.splice(k, 0, i.toString());
-                fullArr.push(arr.join(''));
-            }
-            fullArr.push(fullArr[j] + i.toString());
+    const helper = (combine, unselect) => {  //已选数字数组  未选数字数组
+        if (unselect.length === 0) {
+            res.push(combine);
+            return;
         }
-        fullArr = fullArr.slice(len);
-    }
-    //根据fullArr和nums生成数组
-    for (let i of fullArr) {
-        let arr = [];
-        for (let j of i) {
-            arr.push(nums[j]);
+        for (let i = 0; i < unselect.length; i++) {  //选择未选数字数组中的数字
+            helper([...combine, unselect[i]], [...unselect.slice(0, i), ...unselect.slice(i + 1)]);
         }
-        res.push(arr);
     }
+
+    const res = [];
+
+    helper([], nums);
+
     return res;
 };
