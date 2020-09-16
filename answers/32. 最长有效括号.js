@@ -2,48 +2,32 @@
  * @param {string} s
  * @return {number}
  */
-var longestValidParentheses = function(s) {
-    let len;
-    if (s.length % 2) {  //长度为奇数
-        len = s.length - 1;
-    } else {
-        len = s.length;
-    }
-    while(len) {  //长度不为0时
-        //滑动窗口，找出最长的有效括号
-        for (let i = 0; i < s.length - len + 1; i++) {
-            if (isValid(s.slice(i, i + len))) {
-                return len;
+var longestValidParentheses = function (s) {
+    //使用栈模拟一遍，不能匹配的括号位置用1表示
+    //之后寻找arr中最长的连续0的长度即可
+    const stack = [];
+    const arr = new Array(s.length).fill(0);
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '(') {
+            stack.push(i);  //保存左括号的下标
+        } else {
+            if (stack.pop() === undefined) {  //栈中没有左括号了
+                arr[i] = 1;
             }
         }
-        len -= 2;  //长度必然为偶数，每次自减2
     }
-    return len;
-};
-var isValid = function(s) {
-    let relation = {  //对应关系
-        ')': '(',
-        '}': '{',
-        ']': '['
-    };
-    let stack = [];
-    //遇到左括号让其入栈，遇到右括号与栈内元素匹配
-    for (let i of s) {
-        switch(i) {
-            case '(':
-            case '{':
-            case '[':
-                stack.push(i);
-                break;
-            default:
-                if (relation[i] !== stack.pop()) {
-                    return false;
-                }
+    for (let i of stack) {  //没有被匹配的左括号
+        arr[i] = 1;
+    }
+
+    let max = 0;
+    let curr = 0;
+    for (let i of arr) {
+        if (!i && ++curr) {  //i为0
+            max = Math.max(max, curr);
+        } else {   //i为1
+            curr = 0;
         }
     }
-    if (stack.length !== 0) {  //栈内还有左括号未匹配
-        return false;
-    }
-    return true;
+    return max;
 };
-
