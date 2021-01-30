@@ -19,21 +19,25 @@ var findCircleNum = function (isConnected) {
         }
 
         find(x) {
-            if (this.parents[x] !== x) {
-                return this.find(this.parents[x]);
+            let root = x;
+            while (this.parents[root] !== root) {
+                root = this.parents[root];
             }
 
-            return x;
+            while (this.parents[x] !== root) {  //压缩路径
+                const temp = x;
+                x = this.parents[x];
+                this.parents[temp] = root;
+            }
+
+            return root;
         }
     }
 
     const uf = new UnionFind(isConnected.length);
 
     for (let i = 0; i < isConnected.length; i++) {
-        for (let j = 0; j < isConnected[i].length; j++) {
-            if (i === j) {
-                continue;
-            }
+        for (let j = i + 1; j < isConnected[i].length; j++) {
             if (isConnected[i][j]) {
                 uf.union(i, j);
             }
