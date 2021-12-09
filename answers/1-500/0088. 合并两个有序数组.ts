@@ -1,40 +1,33 @@
-//二分查找
-const find = (array: number[], value: number): number => {
-    let left = 0, right = array.length - 1;
-    while (left <= right) {
-        const mid = left + right >> 1;
-        if (array[mid] === value) {
-            return mid;
-        }
-
-        if (array[mid] > value) {
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
-    }
-
-    return left;
-}
-
-//插入
-const insert = (array: number[], value: number): void => {
-    if (value >= array[array.length - 1]) {
-        array.push(value);
-        return;
-    }
-
-    array.splice(find(array, value), 0, value);
-}
-
 /**
  Do not return anything, modify nums1 in-place instead.
  */
-function merge(nums1: number[], m: number, nums2: number[], n: number): void {
-    while (nums1.length !== m) {
-        nums1.pop();
-    }
-    for (const num of nums2) {
-        insert(nums1, num);
+ function merge(nums1: number[], m: number, nums2: number[], n: number): void {
+    // 指向 nums1 和 nums2 中当前最大元素的下标
+    let p1 = m - 1, p2 = n - 1;
+    // 指向 nums1 当前中需填充的下标
+    let tail = nums1.length - 1;
+
+    // 从 nums1 和 nums2 尾部开始遍历
+    // 每次循环取 nums1[p1] 和 nums2[p2] 中较大者放入 nums[tail]
+    while (tail !== -1) {
+        const num1 = nums1[p1];
+        const num2 = nums2[p2];
+        if (num1 !== undefined && num2 !== undefined) {
+            if (num1 >= num2) {
+                nums1[tail] = num1;
+                --p1;
+            } else {
+                nums1[tail] = num2;
+                --p2;
+            }
+        } else if (num1 !== undefined) {
+            nums1[tail] = num1;
+            --p1;
+        } else {
+            nums1[tail] = num2;
+            --p2;
+        }
+
+        --tail;
     }
 };
